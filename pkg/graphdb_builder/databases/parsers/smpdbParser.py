@@ -80,7 +80,7 @@ def parsePathwayMetaboliteDrugRelationships(fhandler):
     for filename in fhandler.namelist():
         if not os.path.isdir(filename):
             with fhandler.open(filename) as f:
-                df = pd.read_csv(f, sep=',', on_bad_lines=False, low_memory=False)
+                df = pd.read_csv(f, sep=',', on_bad_lines='error', low_memory=False)
                 for index, row in df.iterrows():
                     identifier = row[0]
                     metabolite = row[5]
