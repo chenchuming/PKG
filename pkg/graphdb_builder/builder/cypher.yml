@@ -63,9 +63,9 @@ IMPORT_PROTEIN_DATA:
             WITH line
             MERGE (p:Protein {id:line.ID})
             ON CREATE SET p.accession=line.accession,p.name=line.name,p.description=line.description,p.taxid=line.taxid,p.synonyms=SPLIT(line.synonyms,',');
-            CREATE CONSTRAINT FOR (a:Amino_acid_sequence) REQUIRE a.id IS UNIQUE;
+            
         } IN TRANSACTIONS OF 10000 ROWS;
-
+        CREATE CONSTRAINT FOR (a:Amino_acid_sequence) REQUIRE a.id IS UNIQUE;
         
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/Amino_acid_sequence.tsv" AS line
         FIELDTERMINATOR '\t'
