@@ -62,8 +62,9 @@ IMPORT_PROTEIN_DATA:
         CALL {
             WITH line
             MERGE (p:Protein {id:line.ID})
-            ON CREATE SET p.accession=line.accession,p.name=line.name,p.description=line.description,p.taxid=line.taxid,p.synonyms=SPLIT(line.synonyms,',');
+            ON CREATE SET p.accession=line.accession,p.name=line.name,p.description=line.description,p.taxid=line.taxid,p.synonyms=SPLIT(line.synonyms,',')
         } IN TRANSACTIONS OF 10000 ROWS;
+        
         CREATE CONSTRAINT FOR (a:Amino_acid_sequence) REQUIRE a.id IS UNIQUE;
         
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/Amino_acid_sequence.tsv" AS line
@@ -71,7 +72,7 @@ IMPORT_PROTEIN_DATA:
         CALL {
             WITH line
             MERGE (aa:Amino_acid_sequence {id:line.ID})
-            ON CREATE SET aa.header=line.header,aa.sequence=line.sequence,aa.size=line.size,aa.source=line.source;
+            ON CREATE SET aa.header=line.header,aa.sequence=line.sequence,aa.size=line.size,aa.source=line.source
         } IN TRANSACTIONS OF 10000 ROWS;
 
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/Protein_HAS_Sequence_Amino_acid_sequence.tsv" AS line

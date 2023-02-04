@@ -65,8 +65,8 @@ graph:
     - complexes
     - ppi
     - diseases
-    #- biomarkers
-    - qcmarkers
+    - biomarkers
+    #- qcmarkers
     - drugs
     - food
     - known_variants
@@ -81,9 +81,9 @@ graph:
     - gwas
     - pathway
     - published
-    - user
-    - project
-    - experiment
+    #- user
+    #- project
+    #- experiment
 
 #Imports 
 ontology_entities: 
