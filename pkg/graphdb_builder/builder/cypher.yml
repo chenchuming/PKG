@@ -64,7 +64,7 @@ IMPORT_PROTEIN_DATA:
             MERGE (p:Protein {id:line.ID})
             ON CREATE SET p.accession=line.accession,p.name=line.name,p.description=line.description,p.taxid=line.taxid,p.synonyms=SPLIT(line.synonyms,',')
         } IN TRANSACTIONS OF 10000 ROWS;
-        
+
         CREATE CONSTRAINT FOR (a:Amino_acid_sequence) REQUIRE a.id IS UNIQUE;
         
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/Amino_acid_sequence.tsv" AS line
@@ -1128,25 +1128,30 @@ CREATE_PROJECT: &create_project
         FIELDTERMINATOR '\t'
         MERGE (p:Project {id:line.external_id})
         ON CREATE SET p.internal_id=line.internal_id,p.name=line.name,p.acronym=line.acronym,p.description=line.description, p.type=line.datatypes,p.timepoint=line.timepoints,p.disease=line.disease,p.tissue=line.tissue,p.intervention=line.intervention,p.responsible=line.responsible,p.participant=line.participant,p.start_date=line.start_date,p.end_date=line.end_date,p.status=line.status
-        RETURN COUNT(p) AS c;
+        RETURN COUNT(p) 
+        
+
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/PROJECTID_studies_disease.tsv" AS line
         FIELDTERMINATOR '\t'
         MATCH (p:Project {id:line.START_ID})
         MATCH (d:Disease {name:line.END_ID})
         MERGE (p)-[r:STUDIES_DISEASE]->(d)
         RETURN COUNT(r) AS c;
+
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/PROJECTID_studies_intervention.tsv" AS line
         FIELDTERMINATOR '\t'
         MATCH (p:Project {id:line.START_ID})
         MATCH (c:Clinical_variable {id:line.END_ID})
         MERGE (p)-[r:STUDIES_INTERVENTION]->(c)
         RETURN COUNT(r) AS c;
+
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/PROJECTID_follows_up_project.tsv" AS line
         FIELDTERMINATOR '\t'
         MATCH (p1:Project {id:line.START_ID})
         MATCH (p2:Project {id:line.END_ID})
         MERGE (p1)-[r:FOLLOWS_UP_PROJECT]->(p2)
         RETURN COUNT(r) AS c;
+
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/PROJECTID_studies_tissue.tsv" AS line
         FIELDTERMINATOR '\t'
         MATCH (p:Project {id:line.START_ID})

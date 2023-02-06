@@ -1,14 +1,19 @@
 import os.path
 import zipfile
 import pandas as pd
+import logging
+
 from collections import defaultdict
 from pkg.graphdb_builder import builder_utils
 
 #########################
 #     SMPDB database    #
 #########################
+
+
 def parser(databases_directory, download=True):
-    config = builder_utils.get_config(config_name="smpdbConfig.yml", data_type='databases')
+    config = builder_utils.get_config(
+        config_name="smpdbConfig.yml", data_type='databases')
     urls = config['smpdb_urls']
     entities = set()
     relationships = defaultdict(set)
@@ -29,7 +34,8 @@ def parser(databases_directory, download=True):
             elif dataset == "protein":
                 relationships.update(parsePathwayProteinRelationships(rf))
             elif dataset == "metabolite":
-                relationships.update(parsePathwayMetaboliteDrugRelationships(rf))
+                relationships.update(
+                    parsePathwayMetaboliteDrugRelationships(rf))
 
     builder_utils.remove_directory(directory)
 
@@ -43,13 +49,15 @@ def parsePathways(config, fhandler):
     for filename in fhandler.namelist():
         if not os.path.isdir(filename):
             with fhandler.open(filename) as f:
-                df = pd.read_csv(f, sep=',', on_bad_lines='error', low_memory=False)
+                df = pd.read_csv(
+                    f, sep=',', on_bad_lines='error', low_memory=False)
                 for index, row in df.iterrows():
                     identifier = row[0]
                     name = row[2]
                     description = row[3]
                     linkout = url.replace("PATHWAY", identifier)
-                    entities.add((identifier, "Pathway", name, description, organism, linkout, "SMPDB"))
+                    entities.add((identifier, "Pathway", name,
+                                 description, organism, linkout, "SMPDB"))
 
     return entities
 
@@ -62,12 +70,14 @@ def parsePathwayProteinRelationships(fhandler):
     for filename in fhandler.namelist():
         if not os.path.isdir(filename):
             with fhandler.open(filename) as f:
-                df = pd.read_csv(f, sep=',', on_bad_lines='error', low_memory=False)
+                df = pd.read_csv(
+                    f, sep=',', on_bad_lines='error', low_memory=False)
                 for index, row in df.iterrows():
                     identifier = row[0]
                     protein = row[3]
                     if protein != '':
-                        relationships[("protein", "annotated_to_pathway")].add((protein, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
+                        relationships[("protein", "annotated_to_pathway")].add(
+                            (protein, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
 
     return relationships
 
@@ -80,14 +90,17 @@ def parsePathwayMetaboliteDrugRelationships(fhandler):
     for filename in fhandler.namelist():
         if not os.path.isdir(filename):
             with fhandler.open(filename) as f:
-                df = pd.read_csv(f, sep=',', on_bad_lines='error', low_memory=False)
+                df = pd.read_csv(
+                    f, sep=',', on_bad_lines='error', low_memory=False)
                 for index, row in df.iterrows():
                     identifier = row[0]
                     metabolite = row[5]
                     drug = row[8]
                     if metabolite != '':
-                        relationships[("metabolite", "annotated_to_pathway")].add((metabolite, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
+                        relationships[("metabolite", "annotated_to_pathway")].add(
+                            (metabolite, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
                     if drug != "":
-                        relationships[("drug", "annotated_to_pathway")].add((drug, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
+                        relationships[("drug", "annotated_to_pathway")].add(
+                            (drug, identifier, "ANNOTATED_TO_PATHWAY", evidence, organism, loc, "SMPDB"))
 
     return relationships
