@@ -1,0 +1,753 @@
+interface ActsOnProperties @relationshipProperties {
+  action: String!
+  directionality: Boolean!
+  score: Float!
+  source: String!
+}
+
+type Amino_acid_sequence {
+  header: String!
+  id: String!
+  proteinsHasSequence: [Protein!]!
+    @relationship(
+      type: "HAS_SEQUENCE"
+      direction: IN
+      properties: "HasSequenceProperties"
+    )
+  sequence: String!
+  size: String!
+  source: String!
+}
+
+interface AnnotatedInPathwayProperties @relationshipProperties {
+  cellular_component: String!
+  evidence: String!
+  organism: String!
+  source: String!
+}
+
+interface AssociatedWithProperties @relationshipProperties {
+  action: String
+  evidence_type: String
+  number_publications: String
+  publications: String
+  source: String
+}
+
+interface BelongsToProteinProperties @relationshipProperties {
+  source: String!
+}
+
+type Biological_process {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Cellular_component {
+  description: String!
+  id: String!
+  name: String!
+  proteinsAssociatedWith: [Protein!]!
+    @relationship(
+      type: "ASSOCIATED_WITH"
+      direction: IN
+      properties: "AssociatedWithProperties"
+    )
+  synonyms: [String]!
+  type: String!
+}
+
+type Chromosome {
+  id: String!
+  knownVariantsVariantFoundInChromosome: [Known_variant!]!
+    @relationship(type: "VARIANT_FOUND_IN_CHROMOSOME", direction: IN)
+  name: String!
+  taxid: String!
+  transcriptsLocatedIn: [Transcript!]!
+    @relationship(
+      type: "LOCATED_IN"
+      direction: IN
+      properties: "LocatedInProperties"
+    )
+}
+
+type Clinical_variable {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Clinically_relevant_variant {
+  alternative: String!
+  alternative_names: String
+  chromosome: String!
+  drugsTargetsClinicallyRelevantVariant: [Drug!]!
+    @relationship(
+      type: "TARGETS_CLINICALLY_RELEVANT_VARIANT"
+      direction: IN
+      properties: "TargetsClinicallyRelevantVariantProperties"
+    )
+  id: String!
+  knownVariantsVariantIsClinicallyRelevant: [Known_variant!]!
+    @relationship(
+      type: "VARIANT_IS_CLINICALLY_RELEVANT"
+      direction: IN
+      properties: "VariantIsClinicallyRelevantProperties"
+    )
+  position: BigInt!
+  reference: String!
+  source: String!
+}
+
+interface CompiledInteractsWithProperties @relationshipProperties {
+  evidence: [String]!
+  interaction_type: String!
+  score: Float!
+  scores: [String]!
+  source: [String]!
+}
+
+interface CompiledTargetsProperties @relationshipProperties {
+  evidences: [String]!
+  interaction_type: String!
+  score: Float!
+  scores: [String]!
+  source: String!
+}
+
+type Complex {
+  id: String!
+  name: String!
+  organism: String!
+  proteinsIsSubunitOf: [Protein!]!
+    @relationship(
+      type: "IS_SUBUNIT_OF"
+      direction: IN
+      properties: "IsSubunitOfProperties"
+    )
+  source: String!
+  synonyms: [String]
+}
+
+interface CuratedAffectsInteractionWithProperties @relationshipProperties {
+  effect: String!
+  evidence: String!
+  interaction: String!
+  internal_id: String!
+  source: String!
+}
+
+interface CuratedInteractsWithProperties @relationshipProperties {
+  evidence: [String]!
+  interaction_type: String!
+  method: [String]!
+  score: Float!
+  source: [String]!
+}
+
+interface CuratedTargetsProperties @relationshipProperties {
+  disease: String!
+  evidence: String!
+  interaction_type: String!
+  response: String!
+  score: String!
+  source: String!
+}
+
+interface DetectedInPathologySampleProperties @relationshipProperties {
+  expression_high: String!
+  expression_low: String!
+  expression_medium: String!
+  linkout: String!
+  negative_prognosis_logrank_pvalue: String!
+  not_detected: String!
+  positive_prognosis_logrank_pvalue: String!
+  source: String!
+}
+
+type Disease {
+  description: String!
+  diseasesHasParent: [Disease!]!
+    @relationship(type: "HAS_PARENT", direction: IN)
+  experimentalFactorsMapsTo: [Experimental_factor!]!
+    @relationship(type: "MAPS_TO", direction: IN)
+  hasParentDiseases: [Disease!]!
+    @relationship(type: "HAS_PARENT", direction: OUT)
+  id: String!
+  mentionedInPublicationPublications: [Publication!]!
+    @relationship(
+      type: "MENTIONED_IN_PUBLICATION"
+      direction: OUT
+      properties: "MentionedInPublicationProperties"
+    )
+  name: String!
+  proteinsDetectedInPathologySample: [Protein!]!
+    @relationship(
+      type: "DETECTED_IN_PATHOLOGY_SAMPLE"
+      direction: IN
+      properties: "DetectedInPathologySampleProperties"
+    )
+  synonyms: [String]!
+  type: String!
+}
+
+type Drug {
+  Boiling_Point: String
+  Hydrophobicity: String
+  Isoelectric_Point: String
+  Melting_Point: String
+  Molecular_Formula: String
+  Molecular_Weight: String
+  Water_Solubility: String
+  absorption: String
+  caco2_Permeability: String
+  class: String
+  compiledTargetsProteins: [Protein!]!
+    @relationship(
+      type: "COMPILED_TARGETS"
+      direction: OUT
+      properties: "CompiledTargetsProperties"
+    )
+  curatedTargetsGenes: [Gene!]!
+    @relationship(
+      type: "CURATED_TARGETS"
+      direction: OUT
+      properties: "CuratedTargetsProperties"
+    )
+  description: String
+  drugsInteractsWith: [Drug!]!
+    @relationship(
+      type: "INTERACTS_WITH"
+      direction: IN
+      properties: "InteractsWithProperties"
+    )
+  groups: String!
+  hasSideEffectPhenotypes: [Phenotype!]!
+    @relationship(
+      type: "HAS_SIDE_EFFECT"
+      direction: OUT
+      properties: "HasSideEffectProperties"
+    )
+  id: String!
+  indication: String
+  interactsWithDrugs: [Drug!]!
+    @relationship(
+      type: "INTERACTS_WITH"
+      direction: OUT
+      properties: "InteractsWithProperties"
+    )
+  isIndicatedForPhenotypes: [Phenotype!]!
+    @relationship(
+      type: "IS_INDICATED_FOR"
+      direction: OUT
+      properties: "IsIndicatedForProperties"
+    )
+  kingdom: String
+  metabolism: String
+  name: String!
+  pKa: String
+  pharmacodynamics: String
+  prices: String
+  subclass: String
+  superclass: String
+  synonyms: String!
+  targetsClinicallyRelevantVariantClinicallyRelevantVariants: [Clinically_relevant_variant!]!
+    @relationship(
+      type: "TARGETS_CLINICALLY_RELEVANT_VARIANT"
+      direction: OUT
+      properties: "TargetsClinicallyRelevantVariantProperties"
+    )
+  toxicity: String
+}
+
+type Experiment {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Experimental_factor {
+  description: String!
+  gwasStudiesStudiesTrait: [GWAS_study!]!
+    @relationship(
+      type: "STUDIES_TRAIT"
+      direction: IN
+      properties: "StudiesTraitProperties"
+    )
+  id: String!
+  mapsToDiseases: [Disease!]! @relationship(type: "MAPS_TO", direction: OUT)
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+interface FoundInProteinProperties @relationshipProperties {
+  alignment: String!
+  end: String!
+  source: String!
+  start: String!
+}
+
+type Functional_region {
+  description: String
+  foundInProteinProteins: [Protein!]!
+    @relationship(
+      type: "FOUND_IN_PROTEIN"
+      direction: OUT
+      properties: "FoundInProteinProperties"
+    )
+  id: String!
+  name: String!
+  source: String!
+}
+
+type GWAS_study {
+  date: String!
+  id: String!
+  knownVariantsVariantFoundInGwas: [Known_variant!]!
+    @relationship(
+      type: "VARIANT_FOUND_IN_GWAS"
+      direction: IN
+      properties: "VariantFoundInGwasProperties"
+    )
+  publishedInPublications: [Publication!]!
+    @relationship(type: "PUBLISHED_IN", direction: OUT)
+  replication_size: String
+  sample_size: String
+  studiesTraitExperimentalFactors: [Experimental_factor!]!
+    @relationship(
+      type: "STUDIES_TRAIT"
+      direction: OUT
+      properties: "StudiesTraitProperties"
+    )
+  title: String!
+  trait: String
+}
+
+type Gene {
+  drugsCuratedTargets: [Drug!]!
+    @relationship(
+      type: "CURATED_TARGETS"
+      direction: IN
+      properties: "CuratedTargetsProperties"
+    )
+  family: String
+  id: String!
+  knownVariantsVariantFoundInGene: [Known_variant!]!
+    @relationship(type: "VARIANT_FOUND_IN_GENE", direction: IN)
+  name: String!
+  synonyms: [String]!
+  taxid: String!
+  transcribedIntoTranscripts: [Transcript!]!
+    @relationship(type: "TRANSCRIBED_INTO", direction: OUT)
+  translatedIntoProteins: [Protein!]!
+    @relationship(type: "TRANSLATED_INTO", direction: OUT)
+}
+
+interface HasModificationProperties @relationshipProperties {
+  source: String!
+}
+
+interface HasSequenceProperties @relationshipProperties {
+  source: String!
+}
+
+interface HasSideEffectProperties @relationshipProperties {
+  evidence_from: String!
+  original_side_effect_code: String!
+  source: String!
+}
+
+interface HasStructureProperties @relationshipProperties {
+  source: String!
+}
+
+interface InteractsWithProperties @relationshipProperties {
+  interaction_type: String!
+  source: String!
+}
+
+interface IsIndicatedForProperties @relationshipProperties {
+  evidence: String!
+  original_side_effect_code: String!
+  source: String!
+}
+
+interface IsSubstrateOfProperties @relationshipProperties {
+  evidence_type: String!
+  regulation: String!
+  score: Float!
+  source: String!
+}
+
+interface IsSubunitOfProperties @relationshipProperties {
+  cell_lines: [String]!
+  evidences: [String]!
+  publication: String!
+  source: String!
+}
+
+type Known_variant {
+  alternative_names: String!
+  clinical_relevance: String
+  curatedAffectsInteractionWithProteins: [Protein!]!
+    @relationship(
+      type: "CURATED_AFFECTS_INTERACTION_WITH"
+      direction: OUT
+      properties: "CuratedAffectsInteractionWithProperties"
+    )
+  disease: String!
+  effect: String!
+  external_id: String!
+  id: String!
+  original_source: String!
+  pvariant_id: String!
+  source: String!
+  variantFoundInChromosomeChromosomes: [Chromosome!]!
+    @relationship(type: "VARIANT_FOUND_IN_CHROMOSOME", direction: OUT)
+  variantFoundInGeneGenes: [Gene!]!
+    @relationship(type: "VARIANT_FOUND_IN_GENE", direction: OUT)
+  variantFoundInGwasgwasStudies: [GWAS_study!]!
+    @relationship(
+      type: "VARIANT_FOUND_IN_GWAS"
+      direction: OUT
+      properties: "VariantFoundInGwasProperties"
+    )
+  variantFoundInProteinProteins: [Protein!]!
+    @relationship(type: "VARIANT_FOUND_IN_PROTEIN", direction: OUT)
+  variantIsClinicallyRelevantClinicallyRelevantVariants: [Clinically_relevant_variant!]!
+    @relationship(
+      type: "VARIANT_IS_CLINICALLY_RELEVANT"
+      direction: OUT
+      properties: "VariantIsClinicallyRelevantProperties"
+    )
+}
+
+interface LocatedInProperties @relationshipProperties {
+  end: String!
+  start: String!
+  strand: String!
+}
+
+interface MentionedInPublicationProperties @relationshipProperties {
+  source: String
+}
+
+type Metabolite {
+  average_molecular_weight: String
+  chebi_id: String
+  chemical_formula: String
+  class: String
+  description: String
+  direct_parent: String
+  id: String!
+  kingdom: String
+  name: String!
+  pubchem_compound_id: String
+  sub_class: String
+  super_class: String
+  synonyms: String
+}
+
+type Modification {
+  description: String!
+  id: String!
+  modifiedProteinsHasModification: [Modified_protein!]!
+    @relationship(
+      type: "HAS_MODIFICATION"
+      direction: IN
+      properties: "HasModificationProperties"
+    )
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Modified_protein {
+  hasModificationModifications: [Modification!]!
+    @relationship(
+      type: "HAS_MODIFICATION"
+      direction: OUT
+      properties: "HasModificationProperties"
+    )
+  id: String!
+  isSubstrateOfProteins: [Protein!]!
+    @relationship(
+      type: "IS_SUBSTRATE_OF"
+      direction: OUT
+      properties: "IsSubstrateOfProperties"
+    )
+  position: String!
+  protein: String!
+  proteinsHasModifiedSite: [Protein!]!
+    @relationship(type: "HAS_MODIFIED_SITE", direction: IN)
+  residue: String!
+  sequence_window: String!
+  source: String!
+}
+
+type Molecular_function {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Pathway {
+  description: String!
+  id: String!
+  linkout: String!
+  name: String!
+  organism: String
+  proteinsAnnotatedInPathway: [Protein!]!
+    @relationship(
+      type: "ANNOTATED_IN_PATHWAY"
+      direction: IN
+      properties: "AnnotatedInPathwayProperties"
+    )
+  source: String!
+}
+
+type Peptide {
+  belongsToProteinProteins: [Protein!]!
+    @relationship(
+      type: "BELONGS_TO_PROTEIN"
+      direction: OUT
+      properties: "BelongsToProteinProperties"
+    )
+  id: String!
+  type: String!
+  unique: String!
+}
+
+type Phenotype {
+  description: String!
+  drugsHasSideEffect: [Drug!]!
+    @relationship(
+      type: "HAS_SIDE_EFFECT"
+      direction: IN
+      properties: "HasSideEffectProperties"
+    )
+  drugsIsIndicatedFor: [Drug!]!
+    @relationship(
+      type: "IS_INDICATED_FOR"
+      direction: IN
+      properties: "IsIndicatedForProperties"
+    )
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Protein {
+  accession: String!
+  actsOnProteins: [Protein!]!
+    @relationship(
+      type: "ACTS_ON"
+      direction: OUT
+      properties: "ActsOnProperties"
+    )
+  annotatedInPathwayPathways: [Pathway!]!
+    @relationship(
+      type: "ANNOTATED_IN_PATHWAY"
+      direction: OUT
+      properties: "AnnotatedInPathwayProperties"
+    )
+  associatedWithCellularComponents: [Cellular_component!]!
+    @relationship(
+      type: "ASSOCIATED_WITH"
+      direction: OUT
+      properties: "AssociatedWithProperties"
+    )
+  compiledInteractsWithProteins: [Protein!]!
+    @relationship(
+      type: "COMPILED_INTERACTS_WITH"
+      direction: OUT
+      properties: "CompiledInteractsWithProperties"
+    )
+  curatedInteractsWithProteins: [Protein!]!
+    @relationship(
+      type: "CURATED_INTERACTS_WITH"
+      direction: OUT
+      properties: "CuratedInteractsWithProperties"
+    )
+  description: String
+  detectedInPathologySampleDiseases: [Disease!]!
+    @relationship(
+      type: "DETECTED_IN_PATHOLOGY_SAMPLE"
+      direction: OUT
+      properties: "DetectedInPathologySampleProperties"
+    )
+  drugsCompiledTargets: [Drug!]!
+    @relationship(
+      type: "COMPILED_TARGETS"
+      direction: IN
+      properties: "CompiledTargetsProperties"
+    )
+  functionalRegionsFoundInProtein: [Functional_region!]!
+    @relationship(
+      type: "FOUND_IN_PROTEIN"
+      direction: IN
+      properties: "FoundInProteinProperties"
+    )
+  genesTranslatedInto: [Gene!]!
+    @relationship(type: "TRANSLATED_INTO", direction: IN)
+  hasModifiedSiteModifiedProteins: [Modified_protein!]!
+    @relationship(type: "HAS_MODIFIED_SITE", direction: OUT)
+  hasSequenceAminoAcidSequences: [Amino_acid_sequence!]!
+    @relationship(
+      type: "HAS_SEQUENCE"
+      direction: OUT
+      properties: "HasSequenceProperties"
+    )
+  hasStructureProteinStructures: [Protein_structure!]!
+    @relationship(
+      type: "HAS_STRUCTURE"
+      direction: OUT
+      properties: "HasStructureProperties"
+    )
+  id: String!
+  isSubunitOfComplexes: [Complex!]!
+    @relationship(
+      type: "IS_SUBUNIT_OF"
+      direction: OUT
+      properties: "IsSubunitOfProperties"
+    )
+  knownVariantsCuratedAffectsInteractionWith: [Known_variant!]!
+    @relationship(
+      type: "CURATED_AFFECTS_INTERACTION_WITH"
+      direction: IN
+      properties: "CuratedAffectsInteractionWithProperties"
+    )
+  knownVariantsVariantFoundInProtein: [Known_variant!]!
+    @relationship(type: "VARIANT_FOUND_IN_PROTEIN", direction: IN)
+  modifiedProteinsIsSubstrateOf: [Modified_protein!]!
+    @relationship(
+      type: "IS_SUBSTRATE_OF"
+      direction: IN
+      properties: "IsSubstrateOfProperties"
+    )
+  name: String
+  peptidesBelongsToProtein: [Peptide!]!
+    @relationship(
+      type: "BELONGS_TO_PROTEIN"
+      direction: IN
+      properties: "BelongsToProteinProperties"
+    )
+  proteinsActsOn: [Protein!]!
+    @relationship(
+      type: "ACTS_ON"
+      direction: IN
+      properties: "ActsOnProperties"
+    )
+  proteinsCompiledInteractsWith: [Protein!]!
+    @relationship(
+      type: "COMPILED_INTERACTS_WITH"
+      direction: IN
+      properties: "CompiledInteractsWithProperties"
+    )
+  proteinsCuratedInteractsWith: [Protein!]!
+    @relationship(
+      type: "CURATED_INTERACTS_WITH"
+      direction: IN
+      properties: "CuratedInteractsWithProperties"
+    )
+  synonyms: [String]!
+  taxid: String!
+}
+
+type Protein_structure {
+  id: String!
+  link: String!
+  proteinsHasStructure: [Protein!]!
+    @relationship(
+      type: "HAS_STRUCTURE"
+      direction: IN
+      properties: "HasStructureProperties"
+    )
+  source: String!
+}
+
+type Publication {
+  DOI: String
+  PMC_id: String!
+  diseasesMentionedInPublication: [Disease!]!
+    @relationship(
+      type: "MENTIONED_IN_PUBLICATION"
+      direction: IN
+      properties: "MentionedInPublicationProperties"
+    )
+  gwasStudiesPublishedIn: [GWAS_study!]!
+    @relationship(type: "PUBLISHED_IN", direction: IN)
+  id: String!
+  issue: String
+  journal: String
+  linkout: String!
+  page: String
+  volume: String
+  year: BigInt!
+}
+
+interface StudiesTraitProperties @relationshipProperties {
+  source: String!
+}
+
+interface TargetsClinicallyRelevantVariantProperties @relationshipProperties {
+  disease: String!
+  evidence: String!
+  source: String!
+  type: String!
+}
+
+type Tissue {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+type Transcript {
+  assembly: String!
+  class: String
+  genesTranscribedInto: [Gene!]!
+    @relationship(type: "TRANSCRIBED_INTO", direction: IN)
+  id: String!
+  locatedInChromosomes: [Chromosome!]!
+    @relationship(
+      type: "LOCATED_IN"
+      direction: OUT
+      properties: "LocatedInProperties"
+    )
+  name: String
+  taxid: String!
+}
+
+type Units {
+  description: String!
+  id: String!
+  name: String!
+  synonyms: [String]!
+  type: String!
+}
+
+interface VariantFoundInGwasProperties @relationshipProperties {
+  odds_ratio: String!
+  pvalue: String!
+  source: String!
+  trait: String!
+}
+
+interface VariantIsClinicallyRelevantProperties @relationshipProperties {
+  source: String!
+}
+

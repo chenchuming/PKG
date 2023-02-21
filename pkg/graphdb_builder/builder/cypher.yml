@@ -667,7 +667,6 @@ IMPORT_PATHWAY_DATA:
             WITH line
             MERGE (p:Pathway{id:line.ID})
             ON CREATE SET p.name=line.name,p.description=line.description,p.organism=line.organism,p.linkout=line.linkout,p.source=line.source
-            
         } IN TRANSACTIONS OF 10000 ROWS;
 
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/RESOURCE_protein_annotated_to_pathway.tsv" AS line
@@ -951,8 +950,9 @@ proteomics_class: &proteomics_class
             MATCH (p:Peptide {id:line.END_ID})
             MERGE (s)-[r:HAS_QUANTIFIED_PEPTIDE{value:toFloat(line.value), score:toFloat(line.Score), proteinGroupId:line.Protein_group_IDs}]->(p)
             
-            CREATE CONSTRAINT FOR (m:Modified_protein) REQUIRE m.id IS UNIQUE;
         } IN TRANSACTIONS OF 10000 ROWS;
+        
+        CREATE CONSTRAINT FOR (m:Modified_protein) REQUIRE m.id IS UNIQUE;
 
         LOAD CSV WITH HEADERS FROM "file:///IMPORTDIR/PROJECTID_modifiedprotein.tsv" AS line
         FIELDTERMINATOR '\t'

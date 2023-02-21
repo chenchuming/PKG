@@ -143,7 +143,7 @@ side_effects_resources:
 #Variants
 clinical_variant_resources:
     - 'CGI'
-    - 'OncoKB'
+    #- 'OncoKB'
 
 #Pathways
 pathway_resources:
