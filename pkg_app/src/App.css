@@ -1,5 +1,6 @@
 .navbar {
   background-color: #cdeafd;
+  height: 80px;
 }
 
 .navbar .navbar-nav .nav-link:hover {
@@ -29,10 +30,15 @@ font-weight: bold;
 }
 
 #root {
-  /* max-width: 1280px; */
-  margin: 0 auto;
+  /* max-width: 1600px; */
+  margin-top: 80px;
+  width: 100%;
   padding: 2rem;
-  text-align: center;
+  /* background-color: azure; */
+}
+
+footer {
+  width: 100%;
 }
 
 .logo {
