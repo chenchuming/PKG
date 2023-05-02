@@ -9,8 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/explorer": "^3.4.0",
+    "@apollo/sandbox": "^2.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

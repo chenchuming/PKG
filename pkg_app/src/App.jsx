@@ -4,6 +4,7 @@ import './App.css'
 // import Header from "./components/Header"
 // import Main from "./components/Main"
 // import Footer from "./components/Footer"
+//import { ApolloExplorerReact } from '@apollo/explorer';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
@@ -14,19 +15,20 @@ import Documentation from './pages/Documentation';
 import Nodes from './pages/Nodes'
 import Relationships from './pages/Relationships'
 import Sources from './pages/Sources'
+import GraphQL from './pages/GraphQL'
+import Browser from './pages/Browser'
+import GDSL from './pages/GDSL'
 
 function App() {
 
   return (
-    // <div>
-    //   <Header />
-    //   <Main />
-    //   <Footer />
-    // </div>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/browser" element={<Browser />} />
+          <Route path="/gdsl" element={<GDSL />} />
+          <Route path="/graphql" element={<GraphQL />} />
           <Route path="/sparql" element={<Sparql />} />
           <Route path="/nodes" element={<Nodes />} />
           <Route path="/relationships" element={<Relationships />} />
