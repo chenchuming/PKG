@@ -6,7 +6,7 @@ var document = "&document=query%20Chromosomes%20%7B%0A%20%20chromosomes%20%7B%0A
 
 
 export default function GraphQL() {
-    return <div>
+    return <div className="content">
         <h3>GraphQL APIs</h3>
         <br />
         <p><a href="https://neo4j.com/docs/graphql-manual/current/" target="_blank">GraphQL</a> is an open-source data query and manipulation language and a server-side query runtime engine for APIs.

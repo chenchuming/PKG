@@ -1,6 +1,6 @@
 
 export default function Browser() {
-    return <div>
+    return <div className="content">
         <h3>Neo4j Browser</h3>
         <br />
         <p>

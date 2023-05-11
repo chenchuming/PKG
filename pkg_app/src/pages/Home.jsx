@@ -1,3 +1,5 @@
 export default function Home() {
-    return <h1>Home</h1>;
+    return <div className="content">
+        <h3>Welcome to Protein Knowledge Gragph (PKG)</h3>
+    </div>;
 }

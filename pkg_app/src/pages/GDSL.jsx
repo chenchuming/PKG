@@ -1,6 +1,6 @@
 
 export default function GDSL() {
-    return <div>
+    return <div className="content">
         <h3>Neo4j Graph Data Science Library</h3>
         <br />
         <p>
